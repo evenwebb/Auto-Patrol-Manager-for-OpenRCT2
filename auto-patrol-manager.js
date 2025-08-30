@@ -155,9 +155,23 @@
     authors: META.authors,
     type: META.type,
     targetApiVersion: META.targetApiVersion,
-    licence: "MIT",
+    license: "MIT",
     main() {
-      ui.registerMenuItem(META.name, openWindow);
+      const attemptRegister = () => {
+        if (typeof ui !== "undefined" && ui && ui.registerMenuItem) {
+          ui.registerMenuItem(META.name, openWindow);
+          return true;
+        }
+        return false;
+      };
+
+      if (!attemptRegister() && typeof context !== "undefined" && context && context.subscribe) {
+        const intervalId = context.subscribe("interval", () => {
+          if (attemptRegister() && context.unsubscribe) {
+            context.unsubscribe(intervalId);
+          }
+        });
+      }
     }
   });
 
