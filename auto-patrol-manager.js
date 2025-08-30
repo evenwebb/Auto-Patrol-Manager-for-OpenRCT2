@@ -155,9 +155,11 @@
     authors: META.authors,
     type: META.type,
     targetApiVersion: META.targetApiVersion,
-    licence: "MIT",
+    license: "MIT",
     main() {
-      ui.registerMenuItem(META.name, openWindow);
+      if (typeof ui !== "undefined" && ui && ui.registerMenuItem) {
+        ui.registerMenuItem(META.name, openWindow);
+      }
     }
   });
 
